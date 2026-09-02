@@ -1,0 +1,45 @@
+{
+  "name": "@meddleware/dashboard",
+  "version": "0.1.0",
+  "description": "Meddleware tools hub — Vue 3 SPA listing hosted services (Walrus, Access Gate) with white-label deploy options.",
+  "author": "MeddleWare <meddleware@proton.me>",
+  "license": "0BSD",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meddleware-org/dashboard.git"
+  },
+  "type": "module",
+  "files": [
+    "src",
+    "index.html",
+    "vite.config.ts",
+    "tsconfig.json",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@meddleware/design-tokens": "^0.1.2",
+    "@meddleware/ui": "^0.1.3",
+    "pinia": "^4.0.2",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "~24.12.2",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "typescript": "~6.0.0",
+    "vite": "^8.1.5",
+    "vue-tsc": "~3.3.0"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0"
+  }
+}
