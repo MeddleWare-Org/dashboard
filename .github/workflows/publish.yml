@@ -10,12 +10,20 @@ env:
 
 jobs:
   # ── App source: @meddleware/dashboard → npmjs ──────────────────────────────
+  # Authentication uses npm OIDC trusted publishing (no long-lived NPM_TOKEN
+  # secret): the id-token below is exchanged automatically by npm, and build
+  # provenance is generated as part of the publish. The trusted-publisher
+  # relationship lives server-side on npmjs.com, so the workflow cannot probe it
+  # directly — publishing is therefore an explicit opt-in via the repository
+  # variable NPM_PUBLISH. Unset → the job warns and skips; set → any failure
+  # (e.g. a missing/invalid trusted-publisher relationship) is a real error and
+  # fails the job.
   publish-npm:
     name: npmjs (@meddleware/dashboard)
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # required for OIDC trusted publishing
     steps:
       - uses: actions/checkout@v7.0.1
 
@@ -24,21 +32,38 @@ jobs:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
+      # Trusted publishing (OIDC) requires npm >= 11.5.1. Node 24 ships an older
+      # npm, so upgrade before publishing.
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: npm install
 
       - name: Type-check
         run: npm run type-check
 
-      - name: Publish to npmjs (provenance via OIDC, idempotent)
+      - name: Publish to npmjs (OIDC trusted publishing, idempotent)
+        env:
+          NPM_PUBLISH: ${{ vars.NPM_PUBLISH }}
         run: |
+          # Opt-in gate: skip (warning, not error) when npm publishing has not been
+          # enabled for this repo. This deliberately does not swallow failures once
+          # publishing IS enabled — an invalid or absent trusted-publisher
+          # relationship will surface from `npm publish` below.
+          if [ "${NPM_PUBLISH}" != "true" ]; then
+            echo "::warning::npm publishing not configured — set repository variable NPM_PUBLISH=true and configure an npmjs trusted publisher to enable it. Skipping npm publication."
+            exit 0
+          fi
+
           VERSION=$(node -p "require('./package.json').version")
           HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
             "https://registry.npmjs.org/@meddleware%2fdashboard/${VERSION}")
           if [ "$HTTP" = "200" ]; then
-            echo "::notice::v${VERSION} already published to npmjs — skipping"
+            echo "::notice::v${VERSION} already published to npmjs — skipping."
           else
-            npm publish --provenance
+            # Trusted publishing generates provenance automatically — no --provenance flag needed.
+            npm publish
           fi
 
   # ── App: Docker image → quay.io + Docker Hub ────────────────────────────────
