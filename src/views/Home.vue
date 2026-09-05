@@ -40,6 +40,20 @@ const router = useRouter()
           Launch →
         </a>
       </UiCard>
+
+      <UiCard class="tool-card" @click="router.push('/sealed-storage')">
+        <h2>🔒 Sealed Storage</h2>
+        <p>Client-side encrypted, access-gated storage: seal a file, store it on Walrus, and gate decryption on-chain (NFT pass, time-lock, and more). Testnet — mainnet pending.</p>
+        <a
+          href="https://sui-seal.meddleware.co.uk"
+          target="_blank"
+          rel="noopener"
+          class="launch-link"
+          @click.stop
+        >
+          Launch →
+        </a>
+      </UiCard>
     </div>
   </div>
 </template>

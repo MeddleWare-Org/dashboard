@@ -3,10 +3,9 @@ import { computed } from 'vue'
 import { useRoute, RouterView } from 'vue-router'
 import {
   AppHeader, AppSidebar, AppFooter,
-  ColorModeControl, SidebarItem,
+  ColorModeControl, SidebarItem, StatusWidget,
   useColorMode,
 } from '@meddleware/ui'
-import StatusWidget from './components/StatusWidget.vue'
 
 const { mode, set } = useColorMode('dark')
 const route = useRoute()
@@ -14,6 +13,7 @@ const year = new Date().getFullYear()
 
 const isWalrus = computed(() => route.path === '/walrus')
 const isAccessGate = computed(() => route.path === '/access-gate')
+const isSealedStorage = computed(() => route.path === '/sealed-storage')
 </script>
 
 <template>
@@ -36,6 +36,9 @@ const isAccessGate = computed(() => route.path === '/access-gate')
         </router-link>
         <router-link to="/access-gate" custom v-slot="{ navigate }">
           <SidebarItem label="Access Gate" icon="🔐" :active="isAccessGate" @click="navigate" />
+        </router-link>
+        <router-link to="/sealed-storage" custom v-slot="{ navigate }">
+          <SidebarItem label="Sealed Storage" icon="🔒" :active="isSealedStorage" @click="navigate" />
         </router-link>
       </nav>
     </AppSidebar>

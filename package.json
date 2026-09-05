@@ -1,6 +1,6 @@
 {
   "name": "@meddleware/dashboard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Meddleware tools hub — Vue 3 SPA listing hosted services (Walrus, Access Gate) with white-label deploy options.",
   "author": "MeddleWare <meddleware@proton.me>",
   "license": "0BSD",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@meddleware/design-tokens": "^0.1.2",
-    "@meddleware/ui": "^0.1.4",
+    "@meddleware/ui": "^0.1.5",
     "pinia": "^4.0.2",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0"
