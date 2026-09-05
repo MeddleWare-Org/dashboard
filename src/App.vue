@@ -2,14 +2,13 @@
 import { computed } from 'vue'
 import { useRoute, RouterView } from 'vue-router'
 import {
-  AppHeader, AppSidebar, AppFooter,
+  AppHeader, AppSidebar,
   ColorModeControl, SidebarItem, StatusWidget,
   useColorMode,
 } from '@meddleware/ui'
 
 const { mode, set } = useColorMode('dark')
 const route = useRoute()
-const year = new Date().getFullYear()
 
 const isWalrus = computed(() => route.path === '/walrus')
 const isAccessGate = computed(() => route.path === '/access-gate')
@@ -46,14 +45,32 @@ const isSealedStorage = computed(() => route.path === '/sealed-storage')
     <main class="app-shell__main">
       <RouterView />
     </main>
-
-    <AppFooter class="app-shell__footer" variant="transparent">
-      <span>&copy; {{ year }} Meddleware</span>
-    </AppFooter>
   </div>
 </template>
 
 <style scoped>
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--mw-sidebar-width, 240px) 1fr;
+  grid-template-rows: var(--mw-header-height, 56px) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-shell__header {
+  grid-column: 1 / -1;
+}
+
+.app-shell__sidebar {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.app-shell__main {
+  overflow: hidden;
+  height: 100%;
+}
+
 .brand-mark {
   color: var(--gold);
 }
